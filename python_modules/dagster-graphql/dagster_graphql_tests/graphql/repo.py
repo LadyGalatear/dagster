@@ -26,6 +26,7 @@ from dagster import (
     AssetsDefinition,
     AssetSelection,
     AutoMaterializePolicy,
+    AutomationCondition,
     BackfillPolicy,
     Bool,
     DagsterInstance,
@@ -38,6 +39,8 @@ from dagster import (
     EnumValue,
     ExpectationResult,
     Field,
+    GraphIn,
+    GraphOut,
     In,
     Int,
     IOManager,
@@ -350,6 +353,39 @@ def more_complicated_config():
     noop_op()
     op_with_three_field_config()
 
+@op(out=Out(io_manager_key="io_manager"))
+def graph_backed_asset_op(upstream):
+    return "foo"
+
+
+@graph(
+    name="graph_backed_asset_graph",
+    ins={"upstream": GraphIn()},
+    out={"patient": GraphOut()},
+)
+def graph_backed_asset_graph(upstream):
+    return graph_backed_asset_op(upstream)
+
+
+graph_backed_asset = AssetsDefinition.from_graph(
+    graph_backed_asset_graph,
+    key_prefix=["my_prefix"],
+    keys_by_input_name={
+        "upstream": AssetKey(["private", "gold", "dbt_table_input"])
+    },
+    tags_by_output_name={
+        "patient": {"foo": "bar"},
+    },
+    automation_conditions_by_output_name={
+        "patient": AutomationCondition.eager(),
+    },
+)
+
+
+graph_backed_asset_job = define_asset_job(
+    "graph_backed_asset_job",
+    selection=[graph_backed_asset],
+)
 
 @job
 def config_with_map():
@@ -2184,6 +2220,7 @@ def define_asset_jobs() -> Sequence[UnresolvedAssetJobDefinition]:
         time_partitioned_assets_job,
         two_assets_job,
         typed_assets_job,
+        graph_backed_asset_job,
     ]
 
 
@@ -2396,6 +2433,7 @@ def define_assets():
         dummy_source_asset,
         hanging_partition_asset,
         hanging_graph_asset,
+        graph_backed_asset,
         output_then_hang_asset,
         downstream_asset,
         subsettable_checked_multi_asset,

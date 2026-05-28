@@ -710,6 +710,8 @@ fragment configTypeFragment on ConfigType {
 
 query allConfigTypes($selector: PipelineSelector!, $mode: String!) {
   runConfigSchemaOrError(selector: $selector, mode: $mode ) {
+    __typename
+
     ... on RunConfigSchema {
       allConfigTypes {
         ...configTypeFragment
@@ -728,3 +730,25 @@ def get_field_data(config_type_data, name):
 
 def get_field_names(config_type_data):
     return {field_data["name"] for field_data in config_type_data.get("fields", [])}
+
+def test_graph_backed_asset_job(graphql_context: WorkspaceRequestContext):
+    selector = infer_job_selector(
+        graphql_context,
+        "graph_backed_asset_job",
+    )
+
+    result = execute_dagster_graphql(
+        graphql_context,
+        ALL_CONFIG_TYPES_QUERY,
+        {"selector": selector, "mode": "default"},
+    )
+
+    assert not result.errors
+    assert result.data
+
+    schema_data = result.data["runConfigSchemaOrError"]
+
+    print(result.data)
+    print(result.errors)
+
+    assert "allConfigTypes" in schema_data
