@@ -1,0 +1,29 @@
+[32m2026-05-26 11:53:34 -0700[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 6acf11b5-d064-4da3-ade8-f19c6516176f - 46340 - LOGS_CAPTURED - Capturing logs for process (pid: 46340).
+[32m2026-05-26 11:53:34 -0700[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 6acf11b5-d064-4da3-ade8-f19c6516176f - 46340 - patient.get_patients - STEP_START - Started execution of step "patient.get_patients".
+[32m2026-05-26 11:53:34 -0700[0m - dagster - [34mDEBUG[0m - __ASSET_JOB - 6acf11b5-d064-4da3-ade8-f19c6516176f - patient.get_patients - Loading file from: /Users/awesome281978/SDEV333/dagster/examples/launchpad_repro/.tmp_dagster_home_y4jswx8y/storage/private_gold/dbt_table_input using PickledObjectFilesystemIOManager...
+[32m2026-05-26 11:53:34 -0700[0m - dagster - [34mERROR[0m - [31m__ASSET_JOB - 6acf11b5-d064-4da3-ade8-f19c6516176f - 46340 - patient.get_patients - STEP_FAILURE - Execution of step "patient.get_patients" failed.
+
+dagster._core.errors.DagsterExecutionLoadInputError: Error occurred while loading input "dbt_table_input" of step "patient.get_patients"::
+
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/awesome281978/SDEV333/dagster/examples/launchpad_repro/.tmp_dagster_home_y4jswx8y/storage/private_gold/dbt_table_input'
+
+Stack Trace:
+  File "/Users/awesome281978/SDEV333/dagster/python_modules/dagster/dagster/_core/execution/plan/utils.py", line 57, in op_execution_error_boundary
+    yield
+  File "/Users/awesome281978/SDEV333/dagster/python_modules/dagster/dagster/_core/execution/plan/inputs.py", line 640, in _load_input_with_input_manager
+    value = input_manager.load_input(context)
+  File "/Users/awesome281978/SDEV333/dagster/python_modules/dagster/dagster/_core/storage/upath_io_manager.py", line 455, in load_input
+    return self._load_single_input(path, context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/awesome281978/SDEV333/dagster/python_modules/dagster/dagster/_core/storage/upath_io_manager.py", line 322, in _load_single_input
+    obj = self.load_from_path(context=context, path=path)
+  File "/Users/awesome281978/SDEV333/dagster/python_modules/dagster/dagster/_core/storage/fs_io_manager.py", line 296, in load_from_path
+    with path.open("rb") as file:
+         ~~~~~~~~~^^^^^^
+  File "/Users/awesome281978/SDEV333/dagster/.venv/lib/python3.13/site-packages/upath/implementations/local.py", line 134, in open
+    return PosixPath.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/awesome281978/.local/share/uv/python/cpython-3.13.13-macos-aarch64-none/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[0m
