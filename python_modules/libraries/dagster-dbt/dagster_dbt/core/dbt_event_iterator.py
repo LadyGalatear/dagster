@@ -127,6 +127,7 @@ def _fetch_column_metadata(
                     manifest=invocation.manifest,
                     dagster_dbt_translator=invocation.dagster_dbt_translator,
                     target_path=invocation.target_path,
+                    project=invocation.project,
                 )
 
             except Exception as e:
@@ -243,7 +244,7 @@ class DbtEventIterator(Iterator[T]):
         column lineage metadata using sqlglot, if enabled.
 
         Args:
-            generate_column_lineage (bool): Whether to generate column lineage metadata using sqlglot.
+            with_column_lineage (bool): Whether to generate column lineage metadata using sqlglot.
 
         Returns:
             Iterator[Union[Output, AssetMaterialization, AssetObservation, AssetCheckResult, AssetCheckEvaluation]]:

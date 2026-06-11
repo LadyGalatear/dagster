@@ -1,15 +1,15 @@
 import {
   Box,
   ButtonLink,
-  Caption,
   Colors,
   HeaderCell,
+  Heading,
   Icon,
   Inner,
   Row,
   RowCell,
   Spinner,
-  Subtitle2,
+  Text,
   TextInput,
 } from '@dagster-io/ui-components';
 import {useVirtualizer} from '@tanstack/react-virtual';
@@ -88,7 +88,9 @@ export const TickMaterializationsTable = ({
     if (!tick?.requestedAssetKeys.length) {
       return (
         <Box padding={{vertical: 12, horizontal: 24}}>
-          <Caption color={Colors.textLight()}>None</Caption>
+          <Text size={12} color="textLight">
+            None
+          </Text>
         </Box>
       );
     }
@@ -127,7 +129,9 @@ export const TickMaterializationsTable = ({
         flex={{justifyContent: 'space-between', alignItems: 'center'}}
         border="bottom"
       >
-        <Subtitle2>Requested materializations</Subtitle2>
+        <Heading size={14} weight={600}>
+          Requested materializations
+        </Heading>
         <TextInput
           icon="search"
           value={queryString}
@@ -189,7 +193,9 @@ const AssetDetailRow = ({
                 </Box>
               </Link>
             ) : (
-              <Caption color={Colors.textLight()}>Asset not found</Caption>
+              <Text size={12} color="textLight">
+                Asset not found
+              </Text>
             )
           ) : (
             <Spinner purpose="body-text" />

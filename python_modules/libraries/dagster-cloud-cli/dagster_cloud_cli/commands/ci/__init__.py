@@ -14,6 +14,7 @@ import typer
 import yaml
 from dagster_shared import check
 from dagster_shared.utils import remove_none_recursively
+from dagster_shared.yaml_utils import safe_load_yaml
 from jinja2 import TemplateSyntaxError
 from typer import Typer
 
@@ -362,11 +363,11 @@ def _create_context_from_values(values_list: list[str], values_file: str | None)
     values_file_path = pathlib.Path(values_file) if values_file else None
     if values_file_path:
         try:
-            with open(values_file_path) as f:
+            with open(values_file_path, encoding="utf-8") as f:
                 if values_file_path.suffix == ".json":
                     context.update(json.load(f))
                 elif values_file_path.suffix in [".yaml", ".yml"]:
-                    context.update(yaml.safe_load(f))
+                    context.update(safe_load_yaml(f))
                 else:
                     raise ui.error(f"Unsupported values file extension {values_file_path.suffix}")
         except Exception as err:
@@ -832,6 +833,7 @@ def _build_docker(
     name = location_state.location_name
     docker_utils.verify_docker()
     registry_info = utils.get_registry_info(url)
+    repo_location = name if registry_info.get("is_harbor") else None
 
     docker_image_tag = docker_utils.default_image_tag(
         location_state.deployment_name, name, location_state.build.commit_hash
@@ -853,15 +855,18 @@ def _build_docker(
         base_image=docker_base_image,
         dockerfile_path=dockerfile_path,
         use_editable_dagster=use_editable_dagster,
+        location_name=repo_location,
     )
     if retval != 0:
         raise ui.error(f"Failed to build docker image for location {name}")
 
-    retval = docker_utils.upload_image(docker_image_tag, registry_info)
+    retval = docker_utils.upload_image(docker_image_tag, registry_info, location_name=repo_location)
     if retval != 0:
         raise ui.error(f"Failed to upload docker image for location {name}")
 
-    image = f"{registry_info['registry_url']}:{docker_image_tag}"
+    image = docker_utils.full_image_ref(
+        registry_info["registry_url"], repo_location, docker_image_tag
+    )
     ui.print(f"Built and uploaded image {image} for location {name}")
 
     return state.DockerBuildOutput(image=image)

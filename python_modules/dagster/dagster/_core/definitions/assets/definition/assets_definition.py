@@ -501,8 +501,9 @@ class AssetsDefinition(ResourceAddable, IHasInternalInit):
                 Keys are the names of the outputs, and values are the AutoMaterializePolicies to be attached
                 to the associated asset.
             backfill_policy (Optional[BackfillPolicy]): Defines this asset's BackfillPolicy
-            owners_by_key (Optional[Mapping[AssetKey, Sequence[str]]]): Defines
-                owners to be associated with each of the asset keys for this node.
+            owners_by_output_name (Optional[Mapping[str, Sequence[str]]]): Defines the owners to be
+                associated with each of the output assets for this node. Keys are names of the
+                outputs, and values are sequences of owner strings (user emails or team names).
 
         """
         return AssetsDefinition._from_node(
@@ -1277,9 +1278,9 @@ class AssetsDefinition(ResourceAddable, IHasInternalInit):
             ) -> None:
                 if isinstance(new_value, Mapping):
                     if key in new_value:
-                        replace_dict[attr_name] = new_value[key]  # ty: ignore[invalid-argument-type]
+                        replace_dict[attr_name] = new_value[key]  # ty: ignore[invalid-assignment, invalid-argument-type]
                 elif new_value:
-                    replace_dict[attr_name] = new_value
+                    replace_dict[attr_name] = new_value  # ty: ignore[invalid-assignment]
 
                 old_value = getattr(spec, attr_name)
                 if old_value and old_value != default_value and attr_name in replace_dict:
