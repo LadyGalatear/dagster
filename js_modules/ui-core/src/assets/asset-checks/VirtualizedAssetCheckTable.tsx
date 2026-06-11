@@ -1,4 +1,4 @@
-import {Body2, Box, Caption} from '@dagster-io/ui-components';
+import {Box, Text} from '@dagster-io/ui-components';
 import {useVirtualizer} from '@tanstack/react-virtual';
 import {useRef} from 'react';
 import {Link} from 'react-router-dom';
@@ -80,9 +80,11 @@ export const VirtualizedAssetCheckRow = ({assetNode, height, start, row}: AssetC
             <Link
               to={assetDetailsPathForAssetCheck({assetKey: assetNode.assetKey, name: row.name})}
             >
-              <Body2>{row.name}</Body2>
+              <Text size={14}>{row.name}</Text>
             </Link>
-            <Caption className={styles.captionEllipsed}>{row.description}</Caption>
+            <Text size={12} className={styles.captionEllipsed}>
+              {row.description}
+            </Text>
           </Box>
         </RowCell>
         <RowCell style={{flexDirection: 'row', alignItems: 'center'}}>

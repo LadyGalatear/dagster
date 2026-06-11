@@ -4,9 +4,9 @@ import {
   Box,
   Button,
   ButtonLink,
-  Caption,
   CursorHistoryControls,
   FontFamily,
+  Heading,
   Icon,
   Menu,
   MenuItem,
@@ -14,8 +14,8 @@ import {
   NonIdealState,
   Select,
   Spinner,
-  Subheading,
   Table,
+  Text,
   ifPlural,
 } from '@dagster-io/ui-components';
 import {Chart} from 'chart.js';
@@ -362,7 +362,9 @@ export const TickHistoryTimeline = ({
     return (
       <>
         <Box padding={{top: 16, horizontal: 24}} border="bottom">
-          <Subheading>Recent ticks</Subheading>
+          <Heading size={14} weight={600}>
+            Recent ticks
+          </Heading>
         </Box>
         <Box padding={{vertical: 64}}>
           <Spinner purpose="section" />
@@ -408,7 +410,9 @@ export const TickHistoryTimeline = ({
         onClose={() => onTickClick(undefined)}
       />
       <Box padding={{vertical: 16, horizontal: 24}}>
-        <Subheading>Recent ticks</Subheading>
+        <Heading size={14} weight={600}>
+          Recent ticks
+        </Heading>
       </Box>
       <Box border="top">
         <LiveTickTimeline
@@ -527,7 +531,7 @@ function TickRow({
             </Box>
           )}
           {addedPartitions || deletedPartitions ? (
-            <Caption>
+            <Text size={12}>
               (
               {addedPartitions ? (
                 <span>
@@ -541,7 +545,7 @@ function TickRow({
                 </span>
               ) : null}
               )
-            </Caption>
+            </Text>
           ) : null}
         </Box>
       </td>

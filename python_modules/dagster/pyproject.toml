@@ -95,17 +95,17 @@ test = [
     "pytest-xdist==3.6.1",
     "pytest>=8",
     "pytest-asyncio",
+    "pytest-split",
     "pytest-timeout",
     "responses<=0.23.1",
     "syrupy>=4.0.0",
     "tox>=4.22",
     "tox-uv>=1.16",
     "morefs[asynclocal]",
-    "fsspec<2024.5.0",
     "rapidfuzz",
     "pytest-rerunfailures",
     "psutil",
-    "ruff==0.15.13",
+    "ruff==0.15.15",
 ]
 test-components = [
     "tomlkit",
@@ -136,10 +136,10 @@ pyright = [
     "types-toml",
 ]
 ruff = [
-    "ruff==0.15.13",
+    "ruff==0.15.15",
 ]
 ty = [
-    "ty==0.0.37",
+    "ty==0.0.44",
     ### Stub packages for type checking
     "pandas-stubs",  # version will be resolved against pandas
     "types-backports",  # version will be resolved against backports
